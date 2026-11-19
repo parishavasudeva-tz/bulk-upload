@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Health – Bulk order upload (V4 wireframe)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1A1D23;background:#F7F8FA;-webkit-font-smoothing:antialiased}
+::selection{background:#DCE7FD}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #2563DD;outline-offset:2px}
+a{color:#2563DD;text-underline-offset:3px}a:hover{color:#1F4FB8}
+.btn{height:36px;padding:0 14px;border-radius:8px;border:1px solid #D9DCE2;background:#fff;cursor:pointer;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn:hover{background:#F3F4F6}
+.btn-p{background:#2563DD;border-color:#2563DD;color:#fff}
+.btn-p:hover{background:#1E52C4}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-q{border-color:transparent;background:transparent;color:#2563DD}
+.btn-q:hover{background:#EEF3FE}
+.in{height:36px;border:1px solid #D9DCE2;border-radius:8px;padding:0 10px;font-size:14px;background:#fff;width:100%;box-sizing:border-box}
+.cell{height:32px;width:100%;box-sizing:border-box;border:1px solid transparent;border-radius:6px;padding:0 8px;font-size:13px;background-color:transparent;color:#1A1D23}
+.cell:hover{border-color:#BFC4CC !important}
+.cell:focus{border-color:#2563DD !important;background-color:#fff !important;outline:none;box-shadow:0 0 0 3px #DCE7FD}
+.cell::placeholder{color:#B42318}
+select.cell{-webkit-appearance:none;appearance:none;padding-right:28px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#5B616E 50%),linear-gradient(135deg,#5B616E 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.in:hover{border-color:#BFC4CC}
+select.in{-webkit-appearance:none;appearance:none;padding-right:40px;cursor:pointer;background-color:#fff;background-image:linear-gradient(45deg,transparent 50%,#5B616E 50%),linear-gradient(135deg,#5B616E 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.lbl{display:block;font-size:12px;font-weight:500;color:#5B616E;margin-bottom:6px}
+.card{background:#fff;border:1px solid #E9EBEF;border-radius:12px}
+.nav{display:flex;align-items:center;gap:10px;height:38px;padding:0 12px;border-radius:8px;font-size:13px;font-weight:500;color:#5B616E;letter-spacing:.02em}
+.th{font-size:12px;font-weight:500;color:#5B616E;padding:10px 12px;white-space:nowrap}
+.td{font-size:13px;padding:0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;min-height:44px}
+.chip{height:32px;padding:0 12px;border-radius:999px;border:1px solid #E4E6EB;background:#fff;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:#BFC4CC}
+.link{border:0;background:none;padding:0;cursor:pointer;color:#1A1D23;font-weight:500;font-size:13px;text-align:left}
+.link:hover{color:#2563DD;text-decoration:underline;text-underline-offset:3px}
+.menuitem{display:block;width:100%;text-align:left;border:0;background:#fff;padding:10px 14px;font-size:14px;cursor:pointer}
+.menuitem:hover{background:#F3F4F6}
+*::-webkit-scrollbar{height:8px;width:8px}*::-webkit-scrollbar-thumb{background:#D9DCE2;border-radius:8px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<template id="tpl">
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #F7F8FA">
+
+<nav aria-label="Main" style="flex: 1 1 210px; max-width: 232px; background: #FFFFFF; border-right: 1px solid #E9EBEF; padding: 22px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+  <div style="display: flex; align-items: center; gap: 10px; padding: 0 12px 26px">
+    <div style="width: 26px; height: 26px; border-radius: 7px; background: #2563DD"></div>
+    <span style="font-weight: 600; font-size: 15px">Contact Health</span>
+  </div>
+  <span class="nav">DASHBOARD</span>
+  <span class="nav">TENANTS</span>
+  <span class="nav">INSTITUTIONS</span>
+  <span class="nav">USERS</span>
+  <span class="nav">TEAMS</span>
+  <span class="nav">PATIENTS</span>
+  <span class="nav">HEALTH PROGRAMS</span>
+  <span class="nav" style="background: #EEF3FE; color: #1F4FB8">ORDERS</span>
+  <span class="nav">REPORTS</span>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 32px 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+    <div style="font-size: 13px; color: #5B616E">Orders <span aria-hidden="true">/</span> <span style="color: #1A1D23; font-weight: 500">{{crumb}}</span></div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div style="width: 32px; height: 32px; border-radius: 999px; background: #E9EBEF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #5B616E">MM</div>
+      <div style="font-size: 13px; line-height: 1.3"><div style="font-weight: 500">Manisha Mishra</div><div style="color: #5B616E">Super Admin</div></div>
+    </div>
+  </div>
+
+  <!-- ============ ORDER MANAGEMENT (entry) ============ -->
+  <sc-if value="{{isList}}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid #E9EBEF">
+        <span style="padding: 10px 14px; font-size: 14px; font-weight: 500; color: #1F4FB8; border-bottom: 2px solid #2563DD">Order Management</span>
+        <span style="padding: 10px 14px; font-size: 14px; color: #5B616E">Installation Management</span>
+        <span style="padding: 10px 14px; font-size: 14px; color: #5B616E">Warehouse Management</span>
+        <span style="padding: 10px 14px; font-size: 14px; color: #5B616E">Technician Dashboard</span>
+      </div>
+
+      <sc-if value="{{hasIncoming}}" hint-placeholder-val="{{ true }}">
+        <div class="card" style="padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-color: #C9D8FB; background: #F5F8FF">
+          <div style="font-size: 14px; display: flex; align-items: center; gap: 10px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #2563DD"></span><span><span style="font-weight: 600">{{incomingTotal}} incoming orders</span> <span style="color: #5B616E">from {{incomingHospText}}</span></span></div>
+          <button class="btn" onClick="{{openIncoming}}">Review</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showDraftBanner}}" hint-placeholder-val="{{ false }}">
+        <div class="card" style="padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-color: #C9D8FB; background: #F5F8FF">
+          <div style="font-size: 14px"><span style="font-weight: 600">BATCH-0042 has {{draftCount}} patients waiting for review.</span></div>
+          <button class="btn" onClick="{{resumeDraft}}">Continue review</button>
+        </div>
+      </sc-if>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap">
+          <span class="chip" style="background: #EEF3FE; border-color: #2563DD; color: #1F4FB8">All</span>
+          <span class="chip">New order</span>
+          <span class="chip">Additional device</span>
+          <span class="chip">Advance exchange</span>
+          <span class="chip">Return order</span>
+        </div>
+        <div style="position: relative; display: flex">
+          <button class="btn btn-p" style="border-radius: 8px 0 0 8px" onClick="{{noop}}">Place New Order</button>
+          <button class="btn btn-p" style="border-radius: 0 8px 8px 0; border-left: 1px solid #5B87E6; padding: 0 10px" aria-label="More ways to place orders" aria-expanded="{{menuOpen}}" onClick="{{toggleMenu}}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+            <div class="card" style="position: absolute; right: 0; top: 44px; width: 260px; overflow: hidden; z-index: 5; box-shadow: 0 8px 24px rgba(20,24,33,.10)">
+              <button class="menuitem" onClick="{{toggleMenu}}"><div style="font-weight: 500">Single order</div></button>
+              <button class="menuitem" style="border-top: 1px solid #EEF0F3" onClick="{{startBulk}}"><div style="font-weight: 500">Bulk upload</div></button>
+              <button class="menuitem" style="border-top: 1px solid #EEF0F3; display: flex; align-items: center; justify-content: space-between" onClick="{{openIncoming}}"><span style="font-weight: 500">Incoming orders</span><sc-if value="{{hasIncoming}}" hint-placeholder-val="{{ true }}"><span style="min-width: 22px; height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 999px; background: #2563DD; color: #FFFFFF; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center">{{incomingTotal}}</span></sc-if></button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div class="card" style="overflow: hidden">
+        <div style="overflow-x: auto">
+          <div style="min-width: 900px">
+            <div style="display: grid; grid-template-columns: 120px 200px 110px 140px 140px 120px 1fr; background: #FAFAFB; border-bottom: 1px solid #E9EBEF">
+              <div class="th">Order ID</div><div class="th">Patient</div><div class="th">Patient ID</div><div class="th">Order status</div><div class="th">Order type</div><div class="th">Gateway</div><div class="th">Created</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 200px 110px 140px 140px 120px 1fr; border-bottom: 1px solid #EEF0F3">
+              <div class="td">ORD-5037</div><div class="td">Sample Patient A</div><div class="td">006789</div><div class="td">Completed</div><div class="td">New order</div><div class="td">Cellular</div><div class="td">Nov 18, 2026</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 200px 110px 140px 140px 120px 1fr; border-bottom: 1px solid #EEF0F3">
+              <div class="td">ORD-5036</div><div class="td">Sample Patient B</div><div class="td">006788</div><div class="td">Completed</div><div class="td">New order</div><div class="td">Cellular</div><div class="td">Nov 17, 2026</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 200px 110px 140px 140px 120px 1fr; border-bottom: 1px solid #EEF0F3">
+              <div class="td">ORD-5035</div><div class="td">Sample Patient C</div><div class="td">006787</div><div class="td">New</div><div class="td">New order</div><div class="td">Cellular</div><div class="td">Nov 16, 2026</div>
+            </div>
+            <div style="display: grid; grid-template-columns: 120px 200px 110px 140px 140px 120px 1fr">
+              <div class="td">ORD-5034</div><div class="td">Sample Patient D</div><div class="td">006786</div><div class="td">New</div><div class="td">New order</div><div class="td">Tablet</div><div class="td">Nov 16, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ BULK FLOW HEADER + STEPPER ============ -->
+  <sc-if value="{{inFlow}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; padding-bottom: 8px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+        <h1 style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em">{{flowTitle}}</h1>
+        <button class="btn" onClick="{{exitFlow}}">{{exitLabel}}</button>
+      </div>
+      <sc-if value="{{showStepper}}" hint-placeholder-val="{{ true }}">
+      <ol style="list-style: none; margin: 0; padding: 14px 20px; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 36px">
+        <sc-for list="{{steps}}" as="st" hint-placeholder-count="5">
+          <li style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: {{st.fg}}; font-weight: {{st.weight}}">
+            <span style="width: 22px; height: 22px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; background: {{st.dotBg}}; color: {{st.dotFg}}; border: 1px solid {{st.dotBorder}}">{{st.n}}</span>{{st.label}}
+          </li>
+        </sc-for>
+      </ol>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ INCOMING (FHIR) ============ -->
+  <sc-if value="{{isIncoming}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box">
+      <div class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 600">Waiting for review</h2>
+        <sc-if value="{{hasIncoming}}" hint-placeholder-val="{{ true }}">
+          <div style="border: 1px solid #E9EBEF; border-radius: 10px; overflow: hidden">
+            <sc-for list="{{pendingHosp}}" as="ph" hint-placeholder-count="2">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border-bottom: 1px solid #EEF0F3; flex-wrap: wrap">
+                <div style="display: flex; flex-direction: column; gap: 2px">
+                  <span style="font-size: 14px; font-weight: 600">{{ph.name}}</span>
+                  <span style="font-size: 13px; color: #5B616E">Last received {{ph.last}}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <span style="font-size: 14px"><span style="font-weight: 600">{{ph.pending}}</span> <span style="color: #5B616E">orders</span></span>
+                  <button class="btn" onClick="{{ph.review}}">Review</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{noIncoming}}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 28px; border: 1px dashed #D9DCE2; border-radius: 10px; text-align: center; font-size: 14px; color: #5B616E">You’re all caught up.</div>
+        </sc-if>
+      </div>
+
+      <div class="card" style="overflow: hidden">
+        <div style="padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #E9EBEF; flex-wrap: wrap">
+          <div role="tablist" style="display: flex; gap: 4px">
+            <sc-for list="{{incTabs}}" as="tb" hint-placeholder-count="2">
+              <button role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="height: 48px; padding: 0 12px; border: 0; background: transparent; cursor: pointer; font-size: 14px; font-weight: {{tb.weight}}; color: {{tb.fg}}; border-bottom: 2px solid {{tb.line}}; margin-bottom: -1px">{{tb.label}}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{tabHosp}}" hint-placeholder-val="{{ true }}">
+            <button class="btn" style="height: 32px; font-size: 13px" onClick="{{noop}}">Connect hospital</button>
+          </sc-if>
+        </div>
+        <sc-if value="{{tabHosp}}" hint-placeholder-val="{{ true }}">
+        <div style="overflow-x: auto"><div style="min-width: 900px">
+          <div style="display: grid; grid-template-columns: 1.3fr 1fr 150px 160px 1.6fr 110px; background: #FAFAFB; border-bottom: 1px solid #E9EBEF">
+            <div class="th">Hospital</div><div class="th">System</div><div class="th">Status</div><div class="th">Last received</div><div class="th">Defaults</div><div class="th"></div>
+          </div>
+          <sc-for list="{{hospRows}}" as="hr" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 1.3fr 1fr 150px 160px 1.6fr 110px; border-bottom: 1px solid #EEF0F3; align-items: center">
+              <div class="td" style="font-weight: 500">{{hr.name}}</div>
+              <div class="td" style="color: #5B616E">{{hr.system}}</div>
+              <div class="td"><span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 500; background: {{hr.sBg}}; color: {{hr.sFg}}"><span style="width: 6px; height: 6px; border-radius: 999px; background: {{hr.sDot}}"></span>{{hr.status}}</span></div>
+              <div class="td" style="color: #5B616E">{{hr.last}}</div>
+              <div class="td" style="color: #5B616E">{{hr.defaults}}</div>
+              <div class="td" style="justify-content: flex-end"><button class="btn btn-q" style="height: 30px; font-size: 13px; padding: 0 10px" onClick="{{noop}}">Settings</button></div>
+            </div>
+          </sc-for>
+        </div></div>
+        </sc-if>
+        <sc-if value="{{tabHist}}" hint-placeholder-val="{{ false }}">
+        <div style="overflow-x: auto"><div style="min-width: 760px">
+          <div style="display: grid; grid-template-columns: 130px 1.4fr 110px 140px 110px 1fr; background: #FAFAFB; border-bottom: 1px solid #E9EBEF">
+            <div class="th">Reviewed</div><div class="th">Hospital</div><div class="th">Received</div><div class="th">Orders created</div><div class="th">Declined</div><div class="th">Reviewed by</div>
+          </div>
+          <sc-for list="{{fhirHistory}}" as="fh" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 130px 1.4fr 110px 140px 110px 1fr; border-bottom: 1px solid #EEF0F3">
+              <div class="td">{{fh.date}}</div><div class="td">{{fh.hosp}}</div><div class="td">{{fh.received}}</div><div class="td">{{fh.created}}</div><div class="td">{{fh.declined}}</div><div class="td" style="color: #5B616E">{{fh.by}}</div>
+            </div>
+          </sc-for>
+        </div></div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ STEP 2: ADD DATA ============ -->
+  <sc-if value="{{isAdd}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box">
+      <div class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h2 style="margin: 0; font-size: 17px; font-weight: 600">Batch defaults</h2>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+            <div><label class="lbl" for="b-ten">Tenant</label>
+              <select id="b-ten" class="in" value="{{batch.tenant}}" onChange="{{setTenant}}"><option>Riverbend Health System</option><option>Lakeshore Medical Group</option><option>Summit Care Partners</option></select></div>
+            <div><label class="lbl" for="b-ins">Institution</label>
+              <select id="b-ins" class="in" value="{{batch.inst}}" onChange="{{setInst}}"><option>Riverbend Memorial Hospital</option><option>Riverbend North Clinic</option><option>Lakeshore Family Medicine</option></select></div>
+            <div><label class="lbl" for="b-prg">Health program</label>
+              <select id="b-prg" class="in" value="{{batch.program}}" onChange="{{setProgram}}"><option>Hypertension RPM</option><option>Chronic Care Vitals</option><option>Heart Failure RPM</option><option>Diabetes RPM</option></select></div>
+            <div><label class="lbl" for="b-gw">Gateway</label>
+              <select id="b-gw" class="in" value="{{batch.gateway}}" onChange="{{setGateway}}"><option>Cellular</option><option>Tablet</option><option>Mobile App</option></select></div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start">
+            <div>
+              <span class="lbl">Shipping type</span>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <sc-for list="{{shipOpts}}" as="o" hint-placeholder-count="3">
+                  <button class="chip" aria-pressed="{{o.on}}" style="background: {{o.bg}}; border-color: {{o.border}}; color: {{o.fg}}" onClick="{{o.pick}}">{{o.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <span class="lbl">Devices shipped to each patient</span>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <sc-for list="{{devices}}" as="d" hint-placeholder-count="3">
+                  <span style="height: 32px; padding: 0 12px; border-radius: 999px; background: #F7F8FA; border: 1px solid #E9EBEF; font-size: 13px; display: inline-flex; align-items: center">{{d}}</span>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 24px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 600">How are you adding patients?</h2>
+        <div role="tablist" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{methods}}" as="mt" hint-placeholder-count="3">
+            <button role="tab" aria-selected="{{mt.on}}" onClick="{{mt.pick}}" style="text-align: left; padding: 16px; border-radius: 10px; cursor: pointer; background: {{mt.bg}}; border: 1px solid {{mt.border}}; display: flex; flex-direction: column; gap: 6px">
+              <span style="font-size: 14px; font-weight: 600; color: {{mt.fg}}">{{mt.title}}</span>
+              <span style="font-size: 13px; color: #5B616E; line-height: 1.45">{{mt.desc}}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="border: 1.5px dashed #C9CDD4; border-radius: 12px; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; background: #FCFCFD">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="M7 9l5-5 5 5"></path><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"></path></svg>
+          <div style="font-size: 15px; font-weight: 500">{{dropTitle}}</div>
+          <div style="font-size: 13px; color: #5B616E; max-width: 60ch">{{dropHint}}</div>
+          <sc-if value="{{noFile}}" hint-placeholder-val="{{ true }}">
+            <button class="btn" onClick="{{chooseFile}}">Choose files (sample data)</button>
+          </sc-if>
+          <sc-if value="{{fileReady}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 460px">
+              <sc-for list="{{chosenFiles}}" as="f" hint-placeholder-count="2">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border: 1px solid #E4E6EB; border-radius: 8px; background: #FFFFFF; font-size: 13px">
+                  <span style="display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="1.8" aria-hidden="true"><path d="M14 3H6a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8z"></path><path d="M14 3v5h5"></path></svg>{{f.name}}</span>
+                  <span style="color: #5B616E">{{f.meta}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{isTpl}}" hint-placeholder-val="{{ false }}">
+            <a href="#tpl" style="font-size: 13px">Download the template</a>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{isDocs}}" hint-placeholder-val="{{ false }}">
+          <div style="font-size: 13px; color: #5B616E">AI never fills consent, eligibility or payor details.</div>
+        </sc-if>
+
+        <div style="display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #EEF0F3; padding-top: 20px">
+          <button class="btn" onClick="{{exitFlow}}">Cancel</button>
+          <button class="btn btn-p" disabled="{{noFile}}" onClick="{{goMid}}">{{addCta}}</button>
+        </div>
+      </div>
+
+      <div class="card" style="overflow: hidden">
+        <div style="padding: 16px 20px; font-size: 14px; font-weight: 600; border-bottom: 1px solid #E9EBEF">Recent batches</div>
+        <div style="overflow-x: auto"><div style="min-width: 700px">
+          <div style="display: grid; grid-template-columns: 130px 130px 160px 1fr 120px; background: #FAFAFB; border-bottom: 1px solid #E9EBEF">
+            <div class="th">Batch</div><div class="th">Created</div><div class="th">Source</div><div class="th">Result</div><div class="th">Status</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 130px 130px 160px 1fr 120px; border-bottom: 1px solid #EEF0F3">
+            <div class="td">BATCH-0041</div><div class="td">Nov 12, 2026</div><div class="td">Documents (8)</div><div class="td">22 orders created · 1 skipped</div><div class="td">Completed</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 130px 130px 160px 1fr 120px">
+            <div class="td">BATCH-0040</div><div class="td">Nov 03, 2026</div><div class="td">Spreadsheet</div><div class="td">48 orders created · 3 patients still in review</div><div class="td" style="color: #9A4A00">Draft</div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ STEP 3a: MAP COLUMNS (spreadsheet) ============ -->
+  <sc-if value="{{isMap}}" hint-placeholder-val="{{ false }}">
+    <div class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 24px; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box">
+      <div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: flex-end">
+        <div>
+          <h2 style="margin: 0 0 8px; font-size: 17px; font-weight: 600">Match your columns</h2>
+          <p style="margin: 0; font-size: 14px; color: #5B616E">referrals_nov.xlsx</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+          <sc-if value="{{hasWeak}}" hint-placeholder-val="{{ true }}">
+            <button class="btn" style="height: 32px; font-size: 13px" onClick="{{confirmAll}}">Confirm all {{weakCount}} highlighted</button>
+          </sc-if>
+          <div style="font-size: 13px; padding: 6px 10px; border-radius: 6px; background: {{reqBg}}; color: {{reqFg}}">{{reqText}}</div>
+        </div>
+      </div>
+      <div style="border: 1px solid #E9EBEF; border-radius: 10px; overflow: hidden">
+        <div style="overflow-x: auto"><div style="min-width: 760px">
+          <div style="display: grid; grid-template-columns: 180px 200px 1fr 190px; background: #FAFAFB; border-bottom: 1px solid #E9EBEF">
+            <div class="th">Your column</div><div class="th">Sample value</div><div class="th">Contact Health field</div><div class="th">Match</div>
+          </div>
+          <sc-for list="{{mapRows}}" as="mr" hint-placeholder-count="8">
+            <div style="display: grid; grid-template-columns: 180px 200px 1fr 190px; border-bottom: 1px solid #EEF0F3; background: {{mr.bg}}">
+              <div class="td" style="font-weight: 500">{{mr.col}}</div>
+              <div class="td" style="color: #5B616E">{{mr.sample}}</div>
+              <div class="td" style="padding: 6px 12px">
+                <select class="in" aria-label="Field for {{mr.col}}" value="{{mr.field}}" onChange="{{mr.change}}" style="max-width: 300px">
+                  <option value="first">First name</option><option value="last">Last name</option><option value="dob">Date of birth</option><option value="phone">Mobile phone</option><option value="homephone">Home phone</option><option value="addr1">Address 1</option><option value="addr2">Address 2</option><option value="city">City</option><option value="state">State</option><option value="zip">Zip code</option><option value="lang">Language</option><option value="extId">External ID</option><option value="skip">Don’t import</option>
+                </select>
+              </div>
+              <div class="td" style="gap: 10px; color: {{mr.confFg}}; font-weight: {{mr.confWeight}}">{{mr.confText}}
+                <sc-if value="{{mr.weak}}" hint-placeholder-val="{{ false }}">
+                  <button class="btn" style="height: 28px; padding: 0 10px; font-size: 12px; color: #1A1D23; font-weight: 500" aria-label="Confirm match for {{mr.col}}" onClick="{{mr.confirm}}">Confirm</button>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #EEF0F3; padding-top: 20px">
+        <button class="btn" onClick="{{goAdd}}">Back</button>
+        <button class="btn btn-p" disabled="{{mapBlocked}}" onClick="{{goReview}}">Import 10 patients</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ STEP 3b: EXTRACT (documents) ============ -->
+  <sc-if value="{{isExtract}}" hint-placeholder-val="{{ false }}">
+    <div class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 24px; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box">
+      <div>
+        <h2 style="margin: 0 0 8px; font-size: 17px; font-weight: 600">Documents read</h2>
+        <p style="margin: 0; font-size: 14px; color: #5B616E">10 patients found in 5 files</p>
+      </div>
+      <div style="border: 1px solid #E9EBEF; border-radius: 10px; overflow: hidden">
+        <sc-for list="{{extractFiles}}" as="ef" hint-placeholder-count="5">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border-bottom: 1px solid #EEF0F3; flex-wrap: wrap">
+            <div style="display: flex; align-items: center; gap: 12px; min-width: 0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B616E" stroke-width="1.8" aria-hidden="true"><path d="M14 3H6a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8z"></path><path d="M14 3v5h5"></path></svg>
+              <div><div style="font-size: 14px; font-weight: 500">{{ef.name}}</div><div style="font-size: 12px; color: #5B616E">{{ef.kind}}</div></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px">
+              <span style="font-size: 13px; color: {{ef.noteFg}}">{{ef.note}}</span>
+              <span style="font-size: 13px; font-weight: 500; color: #1F6B45; display: inline-flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Done</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid #EEF0F3; padding-top: 20px">
+        <button class="btn" onClick="{{goAdd}}">Back</button>
+        <button class="btn btn-p" onClick="{{goReview}}">Review 10 patients</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ STEP 4: REVIEW ============ -->
+  <sc-if value="{{isReview}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 600">Review patients</h2>
+      </div>
+      <div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap">
+          <sc-for list="{{filters}}" as="fl" hint-placeholder-count="5">
+            <button class="chip" aria-pressed="{{fl.on}}" onClick="{{fl.pick}}" style="background: {{fl.bg}}; border-color: {{fl.border}}; color: {{fl.fg}}">
+              <span style="width: 8px; height: 8px; border-radius: 999px; background: {{fl.dot}}"></span>{{fl.label}} <span style="font-weight: 600">{{fl.count}}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+          <sc-if value="{{hasReviewRows}}" hint-placeholder-val="{{ true }}">
+            <button class="btn" onClick="{{confirmAllLow}}">Confirm all {{reviewCount}} flagged</button>
+          </sc-if>
+          <input class="in" style="width: 200px" type="search" placeholder="Search name" aria-label="Search rows" value="{{q}}" onChange="{{setQ}}">
+          <select class="in" style="width: 220px" aria-label="Set shipping type for every row" value="" onChange="{{bulkShip}}">
+            <option value="">Set shipping for everyone…</option><option>Normal</option><option>Priority</option><option>Pro Services</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="overflow: hidden">
+        <div style="overflow-x: auto"><div style="min-width: 1770px">
+          <div style="display: grid; grid-template-columns: 150px 120px 130px 116px 144px 196px 112px 64px 86px 200px 140px 1fr {{actW}}; background: #FAFAFB; border-bottom: 1px solid #E9EBEF">
+            <div class="th">Status</div><div class="th">First name</div><div class="th">Last name</div><div class="th">DOB</div><div class="th">Mobile</div><div class="th">Address</div><div class="th">City</div><div class="th">State</div><div class="th">Zip</div><div class="th">Program</div><div class="th">Shipping</div><div class="th">{{srcHead}}</div><div class="th" style="position: sticky; right: 0; z-index: 2; background: #FAFAFB; border-left: 1px solid #E9EBEF; box-shadow: -6px 0 8px -6px rgba(20,24,33,.12); text-align: right; padding: 10px 8px">Actions</div>
+          </div>
+          <sc-for list="{{viewRows}}" as="r" hint-placeholder-count="8">
+            <div style="border-bottom: 1px solid #EEF0F3; background: {{r.bg}}">
+              <div style="display: grid; grid-template-columns: 150px 120px 130px 116px 144px 196px 112px 64px 86px 200px 140px 1fr {{actW}}; align-items: center">
+                <div class="td"><span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 500; background: {{r.sBg}}; color: {{r.sFg}}"><span style="width: 6px; height: 6px; border-radius: 999px; background: {{r.sFg}}"></span>{{r.sLabel}}</span></div>
+                <sc-for list="{{r.inputs}}" as="c" hint-placeholder-count="8">
+                  <div style="padding: 6px 4px"><input class="cell" aria-label="{{c.label}}" title="{{c.tip}}" value="{{c.value}}" placeholder="{{c.ph}}" onChange="{{c.change}}" style="background-color: {{c.bg}}; border-color: {{c.border}}"></div>
+                </sc-for>
+                <div style="padding: 6px 4px"><select class="cell" aria-label="Program for {{r.name}}" title="{{r.progTip}}" value="{{r.program}}" onChange="{{r.setProgram}}" style="font-style: {{r.progStyle}}; color: {{r.progFg}}"><option>Hypertension RPM</option><option>Chronic Care Vitals</option><option>Heart Failure RPM</option><option>Diabetes RPM</option></select></div>
+                <div style="padding: 6px 4px"><select class="cell" aria-label="Shipping for {{r.name}}" title="{{r.shipTip}}" value="{{r.ship}}" onChange="{{r.setShip}}" style="font-style: {{r.shipStyle}}; color: {{r.shipFg}}"><option>Normal</option><option>Priority</option><option>Pro Services</option></select></div>
+                <div class="td" style="color: #5B616E" title="{{r.src}}">{{r.src}}</div>
+                <div class="td" style="position: sticky; right: 0; z-index: 1; align-self: stretch; gap: 2px; justify-content: flex-end; padding: 0 6px; background: {{r.bg}}; border-left: 1px solid #EEF0F3; box-shadow: -6px 0 8px -6px rgba(20,24,33,.12)">
+                  <sc-if value="{{r.canConfirm}}" hint-placeholder-val="{{ false }}">
+                    <button class="btn" style="height: 30px; padding: 0 10px; font-size: 12px" aria-label="Confirm {{r.name}}" title="Values look right" onClick="{{r.confirm}}">Confirm</button>
+                  </sc-if>
+                  <sc-if value="{{r.showSrcBtn}}" hint-placeholder-val="{{ true }}">
+                    <button class="btn btn-q" style="height: 30px; width: 30px; padding: 0; justify-content: center; color: {{r.srcFg}}; background: {{r.srcBg}}" aria-label="{{r.srcLabel}}" title="{{r.srcLabel}}" aria-expanded="{{r.srcOpen}}" onClick="{{r.toggleSrc}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg></button>
+                  </sc-if>
+                  <sc-if value="{{r.showDecline}}" hint-placeholder-val="{{ false }}">
+                    <button class="btn btn-q" style="height: 30px; padding: 0 10px; font-size: 12px; color: {{r.declFg}}" aria-label="{{r.declLabel}} {{r.name}}" onClick="{{r.toggleDecline}}">{{r.declLabel}}</button>
+                  </sc-if>
+                  <sc-if value="{{r.showRemove}}" hint-placeholder-val="{{ true }}">
+                  <button class="btn btn-q" style="height: 30px; width: 30px; padding: 0; justify-content: center; color: #5B616E" aria-label="Remove {{r.name}}" title="Remove row" onClick="{{r.remove}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+                  </sc-if>
+                </div>
+              </div>
+              <sc-if value="{{r.isDup}}" hint-placeholder-val="{{ false }}">
+                <div style="margin: 0 12px 10px 12px; padding: 10px 14px; border-radius: 8px; background: #F7F5FE; border: 1px solid #DCD3FA; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; width: fit-content; max-width: 900px; box-sizing: border-box">
+                  <span style="font-size: 13px; color: #1A1D23"><span style="font-weight: 600; color: #4A2FB0">This may be an existing patient.</span> {{r.dupText}}</span>
+                  <span style="display: flex; gap: 6px">
+                    <button class="btn" style="height: 30px; font-size: 12px; padding: 0 10px" onClick="{{r.dupLink}}">Link to existing patient</button>
+                    <button class="btn" style="height: 30px; font-size: 12px; padding: 0 10px" onClick="{{r.dupNew}}">Create new patient</button>
+                    <button class="btn" style="height: 30px; font-size: 12px; padding: 0 10px" onClick="{{r.dupSkip}}">Skip this patient</button>
+                  </span>
+                </div>
+              </sc-if>
+              <sc-if value="{{r.hasChoice}}" hint-placeholder-val="{{ false }}">
+                <div style="margin: 0 12px 10px 12px; font-size: 12px; color: #5B616E">{{r.choiceText}} <button class="link" style="color: #2563DD; font-size: 12px" onClick="{{r.dupUndo}}">Change</button></div>
+              </sc-if>
+              <sc-if value="{{r.srcOpen}}" hint-placeholder-val="{{ false }}">
+                <div style="margin: 0 12px 12px 12px; max-width: 560px; border: 1px solid #E4E6EB; border-radius: 8px; padding: 12px 14px; background: #FCFCFD; display: flex; flex-direction: column; gap: 4px">
+                  <div style="font-size: 12px; font-weight: 500; color: #5B616E; margin-bottom: 4px">{{r.src}}</div>
+                  <sc-for list="{{r.docLines}}" as="dl" hint-placeholder-count="6">
+                    <div style="display: flex; gap: 10px; font-size: 12px; padding: 3px 6px; border-radius: 4px; background: {{dl.bg}}">
+                      <span style="width: 90px; flex: none; color: #5B616E">{{dl.label}}</span><span style="color: {{dl.fg}}">{{dl.value}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{noRows}}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 40px; text-align: center; font-size: 14px; color: #5B616E">No patients match this filter.</div>
+          </sc-if>
+        </div></div>
+      </div>
+
+      <div class="card" style="position: sticky; bottom: 16px; z-index: 3; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 6px 20px rgba(20,24,33,.08)">
+        <div style="font-size: 14px"><span style="font-weight: 600">{{readyCount}} ready</span> <span style="color: #5B616E">· {{openCount}} need attention</span></div>
+        <div style="display: flex; gap: 8px">
+          <sc-if value="{{showStepper}}" hint-placeholder-val="{{ true }}"><button class="btn" onClick="{{goBackFromReview}}">Back</button></sc-if>
+          <button class="btn btn-p" disabled="{{noneReady}}" onClick="{{submit}}">{{submitLabel}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ STEP 5: DONE ============ -->
+  <sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+    <div class="card" style="padding: 32px; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px">
+      <div>
+        <h2 style="margin: 0 0 8px; font-size: 20px; font-weight: 600">{{res.created}} orders created</h2>
+        <p style="margin: 0; font-size: 14px; color: #5B616E">{{res.sub}}</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #E9EBEF; border: 1px solid #E9EBEF; border-radius: 10px; overflow: hidden">
+        <div style="background: #FFFFFF; padding: 16px"><div style="font-size: 22px; font-weight: 600">{{res.newPatients}}</div><div style="font-size: 13px; color: #5B616E">New patients added to Patient Census as Pending</div></div>
+        <div style="background: #FFFFFF; padding: 16px"><div style="font-size: 22px; font-weight: 600">{{res.linked}}</div><div style="font-size: 13px; color: #5B616E">Orders for existing patients</div></div>
+        <div style="background: #FFFFFF; padding: 16px"><div style="font-size: 22px; font-weight: 600">{{res.draft}}</div><div style="font-size: 13px; color: #5B616E">{{res.draftLabel}}</div></div>
+        <div style="background: #FFFFFF; padding: 16px"><div style="font-size: 22px; font-weight: 600">{{res.skipped}}</div><div style="font-size: 13px; color: #5B616E">{{res.skipLabel}}</div></div>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap">
+        <button class="btn btn-p" onClick="{{doneMain}}">{{doneMainLabel}}</button>
+        <sc-if value="{{res.hasDraft}}" hint-placeholder-val="{{ true }}">
+          <button class="btn" onClick="{{resumeDraft}}">Review the remaining {{res.draft}}</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</main>
+</div>
+</template>
+<script>
+(function(){
+  var h = React.createElement;
+  var ATTR = { 'class':'className', 'for':'htmlFor', 'onclick':'onClick', 'onchange':'onChange', 'oninput':'onInput', 'tabindex':'tabIndex', 'readonly':'readOnly', 'maxlength':'maxLength', 'viewbox':'viewBox' };
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  function lookup(path, scope){
+    path = path.trim();
+    if (path === 'true') return true; if (path === 'false') return false;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    var parts = path.split('.'), v = scope;
+    for (var i=0;i<parts.length;i++){ if (v == null) return undefined; v = v[parts[i]]; }
+    return v;
+  }
+  function interp(str, scope){
+    return str.replace(/\{\{\s*([^}]+?)\s*\}\}/g, function(_, p){ var v = lookup(p, scope); return v == null ? '' : String(v); });
+  }
+  function attrVal(raw, scope){ var m = raw.match(WHOLE); return m ? lookup(m[1], scope) : interp(raw, scope); }
+  function styleObj(str){
+    var o = {};
+    str.split(';').forEach(function(decl){
+      var i = decl.indexOf(':'); if (i < 0) return;
+      var k = decl.slice(0,i).trim(), v = decl.slice(i+1).trim(); if (!k) return;
+      if (k.indexOf('--') === 0) { o[k] = v; return; }
+      k = k.replace(/^-webkit-/, 'Webkit-').replace(/-([a-z])/g, function(_,c){ return c.toUpperCase(); });
+      o[k] = v;
+    });
+    return o;
+  }
+  function kids(node, scope){
+    var out = [];
+    node.childNodes.forEach(function(c, i){ var r = render(c, scope, i); if (Array.isArray(r)) out.push.apply(out, r); else if (r != null) out.push(r); });
+    return out;
+  }
+  function render(node, scope, key){
+    if (node.nodeType === 3) { var t = node.nodeValue; return t.indexOf('{{') >= 0 ? interp(t, scope) : t; }
+    if (node.nodeType !== 1) return null;
+    var tag = node.localName;
+    if (tag === 'sc-if') { return lookup((node.getAttribute('value')||'').replace(/[{}]/g,''), scope) ? h(React.Fragment, {key:key}, kids(node, scope)) : null; }
+    if (tag === 'sc-for') {
+      var list = lookup((node.getAttribute('list')||'').replace(/[{}]/g,''), scope) || [];
+      var as = node.getAttribute('as') || 'item';
+      return h(React.Fragment, {key:key}, list.map(function(item, idx){
+        var s = Object.create(scope); s[as] = item; s.$index = idx;
+        return h(React.Fragment, {key:idx}, kids(node, s));
+      }));
+    }
+    var props = { key: key };
+    for (var a=0; a<node.attributes.length; a++){
+      var at = node.attributes[a], name = at.name;
+      if (name.indexOf('hint-') === 0) continue;
+      var val = attrVal(at.value, scope);
+      if (name === 'style') { props.style = styleObj(String(val)); continue; }
+      if (name === 'value' && (tag === 'select' || tag === 'input')) { props.value = val == null ? '' : val; continue; }
+      if (name === 'disabled') { props.disabled = !!val && val !== 'false'; continue; }
+      name = ATTR[name] || name;
+      props[name] = val;
+    }
+    if ((tag === 'input' || tag === 'select') && 'value' in props && !props.onChange) props.readOnly = true;
+    return h(tag, props, node.childNodes.length ? kids(node, scope) : undefined);
+  }
+  var tplRoot = document.getElementById('tpl').content;
+  window.DCLogic = class extends React.Component {
+    render(){ var vals = this.renderVals(); return h(React.Fragment, null, kids(tplRoot, vals)); }
+  };
+})();
+</script>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      step: 'list', menuOpen: false, method: 'docs', fileReady: false,
+      batch: { tenant: 'Riverbend Health System', inst: 'Riverbend Memorial Hospital', program: 'Hypertension RPM', gateway: 'Cellular', ship: 'Normal' },
+      map: this.seedMap(), rows: this.seedRows(),
+      filter: 'all', q: '', sel: null, srcOpen: null, draftBanner: false, res: null, mode: 'bulk', curHosp: null,
+      hospitals: this.seedHospitals(),
+      fhirHistory: [
+        { date: 'Nov 18, 2026', hosp: 'Riverbend Memorial Hospital', received: 14, created: 12, declined: 2, by: 'Manisha Mishra' },
+        { date: 'Nov 17, 2026', hosp: 'Riverbend North Clinic', received: 6, created: 6, declined: 0, by: 'Manisha Mishra' },
+        { date: 'Nov 14, 2026', hosp: 'Riverbend Memorial Hospital', received: 9, created: 8, declined: 1, by: 'Order team' }
+      ]
+    };
+  }
+
+  seedMap() {
+    return [
+      { col: 'Pt First Nm', sample: 'Marta', field: 'first', conf: 98 },
+      { col: 'Pt Last Nm', sample: 'Delgado', field: 'last', conf: 98 },
+      { col: 'Birth Dt', sample: '1958-03-11', field: 'dob', conf: 95 },
+      { col: 'Cell', sample: '602.555.0148', field: 'phone', conf: 88 },
+      { col: 'Home Ph', sample: '602.555.0102', field: 'homephone', conf: 84 },
+      { col: 'Street', sample: '1820 W Palm Ln', field: 'addr1', conf: 93 },
+      { col: 'Apt', sample: 'Unit 4', field: 'addr2', conf: 72 },
+      { col: 'City', sample: 'Phoenix', field: 'city', conf: 99 },
+      { col: 'ST', sample: 'AZ', field: 'state', conf: 90 },
+      { col: 'Zip5', sample: '85007', field: 'zip', conf: 97 },
+      { col: 'Lang', sample: 'SPA', field: 'lang', conf: 81 },
+      { col: 'MRN', sample: 'A-229184', field: 'extId', conf: 64 },
+      { col: 'Ins Carrier', sample: 'Sample Health Plan', field: 'skip', conf: 90 },
+      { col: 'Referring MD', sample: 'Dr. Sample', field: 'skip', conf: 90 }
+    ];
+  }
+
+  seedRows() {
+    const base = (o) => Object.assign({ email: '', lang: 'English', extId: '', program: null, ship: null, low: [], conf: {}, edited: [], dup: null, dupChoice: null }, o);
+    return [
+      base({ id: 1, first: 'Marta', last: 'Delgado', dob: '03/11/1958', phone: '(602) 555-0148', addr1: '1820 W Palm Ln', city: 'Phoenix', state: 'AZ', zip: '85007', lang: 'Spanish', extId: 'A-229184', doc: 'referral_delgado.pdf · p.1',
+        dup: { id: '004512', since: 'Apr 2025', program: 'Chronic Care Vitals' } }),
+      base({ id: 2, first: 'James', last: 'Okafor', dob: '07/22/1949', phone: '(480) 555-0193', addr1: '77 E Camelback Rd', city: 'Phoenix', state: 'AZ', zip: '85012', extId: 'A-230017', doc: 'facesheets_nov.pdf · p.2' }),
+      base({ id: 3, first: 'Linh', last: 'Tran', dob: '11/02/1962', phone: '(623) 555-0177', addr1: '3150 N 35th Ave', city: 'Phoenix', state: 'AZ', zip: '85017', lang: 'Vietnamese', doc: 'facesheets_nov.pdf · p.5', low: ['phone'], conf: { phone: 61 } }),
+      base({ id: 4, first: 'Robert', last: 'Fields', dob: '01/30/1955', phone: '(480) 555-0121', addr1: '410 N 3rd St', city: 'Tempe', state: 'AZ', zip: '', extId: 'A-230102', doc: 'facesheets_nov.pdf · p.7' }),
+      base({ id: 5, first: 'Gloria', last: 'Benitez', dob: '08/14/1971', phone: '(602) 555-0166', addr1: '905 S 7th Ave', city: 'Phoenix', state: 'AZ', zip: '85007', lang: 'Spanish', doc: 'fax_scan_0193.tiff · p.1', low: ['dob'], conf: { dob: 58 } }),
+      base({ id: 6, first: 'Harold', last: 'Brooks', dob: '05/09/1946', phone: '(480) 555-0110', addr1: '2201 E Apache Blvd', city: 'Tempe', state: 'AZ', zip: '85281', doc: 'facesheets_nov.pdf · p.9' }),
+      base({ id: 7, first: 'Priya', last: 'Nair', dob: '12/19/1960', phone: '(602) 555-0185', addr1: '640 W Roosevelt St', city: 'Phoenix', state: 'AZ', zip: '85003', program: 'Heart Failure RPM', doc: 'facesheets_nov.pdf · p.11' }),
+      base({ id: 8, first: 'Samuel', last: 'Ortiz', dob: '04/03/1952', phone: '(623) 555-0139', addr1: '8420 W Indian School Rd', city: 'Phoenix', state: 'AZ', zip: '85037', lang: 'Spanish', doc: 'facesheets_nov.pdf · p.13' }),
+      base({ id: 9, first: 'Dorothy', last: 'Kim', dob: '09/27/1944', phone: '(480) 555-0154', addr1: '2209 S Mill Av', city: 'Tempe', state: 'AZ', zip: '85282', lang: 'Korean', doc: 'referral_list_clinicA.pdf · p.1', low: ['addr1'], conf: { addr1: 66 } }),
+      base({ id: 10, first: 'Victor', last: 'Hale', dob: '02/16/1958', phone: '(602) 555-0107', addr1: '1500 E Thomas Rd', city: 'Phoenix', state: 'AZ', zip: '85014', doc: 'referral_list_clinicA.pdf · p.1' })
+    ];
+  }
+
+  seedHospitals() {
+    return [
+      { id: 'md1', name: 'Riverbend Memorial Hospital', system: 'Epic', status: 'Connected', last: 'Today, 2:14 AM', pending: 10, rowIds: null, program: 'Hypertension RPM', gateway: 'Cellular', ship: 'Normal' },
+      { id: 'mg', name: 'Riverbend North Clinic', system: 'Oracle Health', status: 'Connected', last: 'Today, 9:40 AM', pending: 4, rowIds: [2, 6, 7, 10], program: 'Chronic Care Vitals', gateway: 'Cellular', ship: 'Priority' },
+      { id: 'cht', name: 'Lakeshore Family Medicine', system: 'Epic', status: 'Needs attention', last: 'Nov 12, 2026', pending: 0, rowIds: [], program: 'Heart Failure RPM', gateway: 'Tablet', ship: 'Normal' }
+    ];
+  }
+
+  status(r) {
+    if (r.declined) return 'declined';
+    const REQ = ['first', 'last', 'dob', 'phone', 'addr1', 'city', 'state', 'zip'];
+    if (r.dup && r.dupChoice === 'skip') return 'skipped';
+    if (r.dup && !r.dupChoice) return 'dup';
+    if (REQ.some((k) => !r[k])) return 'missing';
+    if (r.low.length) return 'review';
+    return 'ready';
+  }
+
+  updRow(id, fn) { this.setState((st) => ({ rows: st.rows.map((r) => (r.id === id ? fn(r) : r)) })); }
+
+  renderVals() {
+    const s = this.state, m = s.method, self = this;
+    const REQ = ['first', 'last', 'dob', 'phone', 'addr1', 'city', 'state', 'zip'];
+    const LABEL = { first: 'First name', last: 'Last name', dob: 'Date of birth', phone: 'Mobile phone', email: 'Email', addr1: 'Address 1', city: 'City', state: 'State', zip: 'Zip code', lang: 'Language', extId: 'External ID / MRN' };
+    const META = {
+      ready: { label: 'Ready', fg: '#1F6B45', bg: '#EAF6EF', dot: '#2E8A5B' },
+      review: { label: 'Needs review', fg: '#9A4A00', bg: '#FFF3E3', dot: '#D97706' },
+      missing: { label: 'Missing info', fg: '#B42318', bg: '#FEEFEE', dot: '#D92D20' },
+      dup: { label: 'Possible duplicate', fg: '#4A2FB0', bg: '#F1EEFD', dot: '#6E4FE0' },
+      skipped: { label: 'Skipped', fg: '#5B616E', bg: '#F1F2F4', dot: '#9AA0AA' },
+      declined: { label: 'Declined', fg: '#5B616E', bg: '#F1F2F4', dot: '#9AA0AA' }
+    };
+    const stepIdx = { add: 0, map: 1, extract: 1, review: 2, done: 3 };
+    const midLabel = 'Prepare data';
+    const fhir = s.mode === 'fhir';
+    const hosp = s.hospitals.find((h) => h.id === s.curHosp) || null;
+    const TIMES = ['2:14 AM', '2:09 AM', '1:58 AM', '1:41 AM', '1:30 AM', '12:55 AM', '12:47 AM', '12:20 AM', '12:02 AM', 'Yesterday 11:48 PM'];
+    const srcOf = (r, i) => fhir ? (TIMES[(r.id - 1) % 10].indexOf('Yesterday') === 0 ? TIMES[(r.id - 1) % 10] : 'Today ' + TIMES[(r.id - 1) % 10]) : (m === 'docs' ? r.doc : m === 'sheet' ? 'referrals_nov.xlsx · row ' + (i + 2) : 'Template · row ' + (i + 2));
+    const provOf = (r, k) => {
+      if (r.edited.includes(k)) return { t: 'Edited by you', fg: '#1F4FB8' };
+      if (r.low.includes(k)) return m === 'docs' ? { t: 'AI ' + r.conf[k] + '% sure', fg: '#9A4A00' } : { t: 'Format check', fg: '#9A4A00' };
+      if (REQ.includes(k) && !r[k]) return { t: 'Not found', fg: '#B42318' };
+      return { t: m === 'docs' ? 'AI extracted' : m === 'sheet' ? 'From your file' : 'From template', fg: '#5B616E' };
+    };
+    const reasonOf = (r, st) => {
+      if (st === 'dup') return 'Matches patient ' + r.dup.id;
+      if (st === 'missing') return REQ.filter((k) => !r[k]).map((k) => LABEL[k]).join(', ') + ' missing';
+      if (st === 'review') return (m === 'docs' ? 'AI unsure about: ' : 'Check the format of: ') + r.low.map((k) => LABEL[k]).join(', ');
+      if (st === 'skipped') return 'Will not be imported';
+      return r.dupChoice === 'link' ? 'Linked to existing patient' : 'All required fields present';
+    };
+
+    const rowsWithStatus = s.rows.map((r, i) => ({ r, i, st: this.status(r) }));
+    const counts = { all: s.rows.length, ready: 0, review: 0, missing: 0, dup: 0, skipped: 0, declined: 0 };
+    rowsWithStatus.forEach((x) => { counts[x.st]++; });
+    const openCount = counts.review + counts.missing + counts.dup;
+
+    const q = (s.q || '').toLowerCase();
+    const choiceTxt = { link: 'The order will be added to the existing patient.', new: 'A new patient record will be created.', skip: 'This patient will be skipped.' };
+    const viewRows = rowsWithStatus
+      .filter((x) => s.filter === 'all' || x.st === s.filter)
+      .filter((x) => !q || (x.r.first + ' ' + x.r.last).toLowerCase().includes(q))
+      .map(({ r, i, st }) => {
+        const mt = META[st];
+        const name = r.first + ' ' + r.last;
+        const inp = (k) => {
+          const missing = REQ.includes(k) && !r[k];
+          const low = r.low.includes(k);
+          const edited = r.edited.includes(k);
+          return {
+            label: LABEL[k] + ' for ' + name, value: r[k] || '', ph: missing ? 'Required' : '',
+            bg: missing ? '#FEEFEE' : low ? '#FFF3E3' : 'transparent',
+            border: missing ? '#E5786E' : low ? '#E7A04A' : 'transparent',
+            tip: missing ? 'Required' : low ? (m === 'docs' ? 'AI confidence ' + r.conf[k] + '% sure. Edit it, or confirm the row.' : 'Check format') : edited ? 'Edited by you' : (m === 'docs' ? 'AI extracted' : m === 'sheet' ? 'From your file' : 'From template'),
+            change: (e) => { const v = e.target.value; self.updRow(r.id, (row) => Object.assign({}, row, { [k]: v, low: row.low.filter((x) => x !== k), edited: row.edited.includes(k) ? row.edited : row.edited.concat([k]) })); }
+          };
+        };
+        const line = (label, ks, value) => {
+          const low = ks.some((k) => r.low.includes(k));
+          const miss = ks.some((k) => REQ.includes(k) && !r[k]);
+          return { label, value: miss ? value + '  (not found)' : value, bg: low ? '#FFE9CC' : 'transparent', fg: miss ? '#B42318' : '#1A1D23' };
+        };
+        const setDupC = (c) => () => self.updRow(r.id, (row) => Object.assign({}, row, { dupChoice: c }));
+        return {
+          name, bg: st === 'skipped' ? '#FAFAFB' : '#FFFFFF',
+          sLabel: mt.label, sFg: mt.fg, sBg: mt.bg,
+          inputs: ['first', 'last', 'dob', 'phone', 'addr1', 'city', 'state', 'zip'].map(inp),
+          program: r.program || s.batch.program, progStyle: r.program ? 'normal' : 'italic', progFg: r.program ? '#1A1D23' : '#5B616E', progTip: r.program ? 'Changed for this patient' : 'Batch default',
+          ship: r.ship || s.batch.ship, shipStyle: r.ship ? 'normal' : 'italic', shipFg: r.ship ? '#1A1D23' : '#5B616E', shipTip: r.ship ? 'Changed for this patient' : 'Batch default',
+          setProgram: (e) => { const v = e.target.value; self.updRow(r.id, (row) => Object.assign({}, row, { program: v === s.batch.program ? null : v })); },
+          setShip: (e) => { const v = e.target.value; self.updRow(r.id, (row) => Object.assign({}, row, { ship: v === s.batch.ship ? null : v })); },
+          src: srcOf(r, i),
+          canConfirm: st === 'review', confirm: () => self.updRow(r.id, (row) => Object.assign({}, row, { low: [] })),
+          isDup: st === 'dup',
+          dupText: r.dup ? 'Same name, DOB and phone as patient ' + r.dup.id + '.' : '',
+          dupLink: setDupC('link'), dupNew: setDupC('new'), dupSkip: setDupC('skip'), dupUndo: setDupC(null),
+          hasChoice: !!(r.dup && r.dupChoice), choiceText: r.dupChoice ? choiceTxt[r.dupChoice] : '',
+          showSrcBtn: m === 'docs' && !fhir, srcOpen: s.srcOpen === r.id, srcLabel: s.srcOpen === r.id ? 'Hide source document' : 'View source document', srcFg: s.srcOpen === r.id ? '#1F4FB8' : '#5B616E', srcBg: s.srcOpen === r.id ? '#EEF3FE' : 'transparent',
+          toggleSrc: () => self.setState({ srcOpen: s.srcOpen === r.id ? null : r.id }),
+          docLines: [
+            line('Patient', ['first', 'last'], name),
+            line('DOB', ['dob'], r.dob || '—'),
+            line('Phone (cell)', ['phone'], r.phone || '—'),
+            line('Address', ['addr1', 'city', 'state', 'zip'], [r.addr1, r.city, (r.state + ' ' + r.zip).trim()].filter(Boolean).join(', ')),
+            line('Language', ['lang'], r.lang || '—'),
+            line('MRN', ['extId'], r.extId || '—')
+          ],
+          remove: () => self.setState((st2) => ({ rows: st2.rows.filter((x) => x.id !== r.id) })),
+          showRemove: !fhir, showDecline: fhir,
+          declLabel: r.declined ? 'Undo' : 'Decline', declFg: r.declined ? '#1F4FB8' : '#B42318',
+          toggleDecline: () => self.updRow(r.id, (row) => Object.assign({}, row, { declined: !row.declined }))
+        };
+      });
+    const filters = [['all', 'All', '#9AA0AA'], ['ready', 'Ready', META.ready.dot], ['review', 'Needs review', META.review.dot], ['missing', 'Missing info', META.missing.dot], ['dup', 'Possible duplicates', META.dup.dot]]
+      .map(([key, label, dot]) => {
+        const on = s.filter === key;
+        return { label, dot, count: counts[key], on, bg: on ? '#EEF3FE' : '#FFFFFF', border: on ? '#2563DD' : '#E4E6EB', fg: on ? '#1F4FB8' : '#1A1D23', pick: () => this.setState({ filter: key }) };
+      });
+
+    // selected row panel
+    let sel = null;
+    const selRow = s.rows.find((r) => r.id === s.sel);
+    if (selRow) {
+      const r = selRow, i = s.rows.indexOf(r), st = this.status(r), mt = META[st];
+      const keys = ['first', 'last', 'dob', 'phone', 'email', 'addr1', 'city', 'state', 'zip', 'lang', 'extId'];
+      const fields = keys.map((k) => {
+        const p = provOf(r, k);
+        const low = r.low.includes(k), missing = REQ.includes(k) && !r[k];
+        return {
+          id: 'f-' + k, label: LABEL[k], value: r[k] || '', ph: missing ? 'Required' : '',
+          prov: p.t, provFg: p.fg,
+          span: ['addr1', 'email', 'extId'].includes(k) ? '1 / -1' : 'auto',
+          border: missing ? '#E5786E' : low ? '#E7A04A' : '#D9DCE2',
+          inBg: missing ? '#FFF8F7' : low ? '#FFFAF2' : '#FFFFFF',
+          change: (e) => {
+            const v = e.target.value;
+            self.updRow(r.id, (row) => Object.assign({}, row, { [k]: v, low: row.low.filter((x) => x !== k), edited: row.edited.includes(k) ? row.edited : row.edited.concat([k]) }));
+          }
+        };
+      });
+      const line = (label, ks, value) => {
+        const low = ks.some((k) => r.low.includes(k));
+        const miss = ks.some((k) => REQ.includes(k) && !r[k]);
+        return { label, value: miss ? value + '  (not found)' : value, bg: low ? '#FFE9CC' : 'transparent', fg: miss ? '#B42318' : '#1A1D23' };
+      };
+      const choiceText = { link: 'This order will be linked to existing patient ' + (r.dup ? r.dup.id : '') + '.', new: 'A new patient record will be created.', skip: 'This row will be skipped.' };
+      sel = {
+        name: r.first + ' ' + r.last, sLabel: mt.label, sFg: mt.fg, sBg: mt.bg, reason: reasonOf(r, st), src: srcOf(r, i),
+        isDup: st === 'dup', hasDupChoice: !!(r.dup && r.dupChoice), dupChoiceText: r.dupChoice ? choiceText[r.dupChoice] : '',
+        dupText: r.dup ? 'Patient ' + r.dup.id + ' · ' + r.first + ' ' + r.last + ' · DOB ' + r.dob + ' · ' + r.phone + ' · Active since ' + r.dup.since + ' on ' + r.dup.program + '.' : '',
+        docLines: [
+          line('Patient', ['first', 'last'], r.first + ' ' + r.last),
+          line('DOB', ['dob'], r.dob || '—'),
+          line('Phone (cell)', ['phone'], r.phone || '—'),
+          line('Address', ['addr1', 'city', 'state', 'zip'], [r.addr1, r.city, (r.state + ' ' + r.zip).trim()].filter(Boolean).join(', ')),
+          line('Language', ['lang'], r.lang || '—'),
+          line('MRN', ['extId'], r.extId || '—')
+        ],
+        fields,
+        program: r.program || s.batch.program, ship: r.ship || s.batch.ship,
+        progProv: r.program ? 'Changed for this patient' : 'Batch default',
+        shipProv: r.ship ? 'Changed for this patient' : 'Batch default',
+        canConfirm: st === 'review'
+      };
+    }
+
+    const nextIssue = () => {
+      const list = s.rows;
+      const start = Math.max(0, list.findIndex((r) => r.id === s.sel));
+      for (let n = 1; n <= list.length; n++) {
+        const r = list[(start + n) % list.length];
+        if (['review', 'missing', 'dup'].includes(this.status(r))) { this.setState({ sel: r.id }); return; }
+      }
+      this.setState({ sel: null });
+    };
+
+    const devices = (() => {
+      const byProg = { 'Hypertension RPM': ['Weight scale', 'BP cuff', 'Glucometer'], 'Chronic Care Vitals': ['Weight scale', 'BP cuff', 'SpO2', 'Glucometer'], 'Heart Failure RPM': ['Weight scale', 'BP cuff', 'SpO2'], 'Diabetes RPM': ['BP cuff', 'CGM'] };
+      const d = (byProg[s.batch.program] || []).slice();
+      if (s.batch.gateway === 'Tablet') d.push('Tablet');
+      return d;
+    })();
+
+    const methodDefs = [
+      { key: 'docs', title: 'Patient documents', desc: 'Referrals, face sheets or faxes. AI reads them.', effort: 'Least typing' },
+      { key: 'sheet', title: 'Your own spreadsheet', desc: 'Any EHR export. AI matches the columns.', effort: 'No reformatting' },
+      { key: 'tpl', title: 'Contact Health template', desc: 'Our 14-column Excel template.', effort: 'Most control' }
+    ];
+    const methods = methodDefs.map((d) => {
+      const on = m === d.key;
+      return Object.assign({}, d, { on, bg: on ? '#F5F8FF' : '#FFFFFF', border: on ? '#2563DD' : '#E4E6EB', fg: on ? '#1F4FB8' : '#1A1D23', pick: () => this.setState({ method: d.key, fileReady: false }) });
+    });
+    const drop = {
+      docs: ['Drop patient documents here', 'PDF, TIFF, JPG or PNG', [{ name: 'referral_delgado.pdf', meta: '1 page' }, { name: 'facesheets_nov.pdf', meta: '14 pages' }, { name: 'fax_scan_0193.tiff', meta: '1 page' }, { name: 'insurance_card_okafor.jpg', meta: 'image' }, { name: 'referral_list_clinicA.pdf', meta: '2 pages' }], 'Read documents'],
+      sheet: ['Drop your spreadsheet here', 'XLSX or CSV', [{ name: 'referrals_nov.xlsx', meta: '10 patients · 14 columns' }], 'Match columns'],
+      tpl: ['Drop your filled template here', 'XLSX', [{ name: 'bulk_orders_template.xlsx', meta: '10 patients' }], 'Check template']
+    }[m];
+
+    const mapRows = s.map.map((mr, idx) => {
+      const weak = mr.conf < 85 && mr.field !== 'skip' && !mr.ok;
+      return {
+        col: mr.col, sample: mr.sample, field: mr.field, weak,
+        confirm: () => { self.setState((st) => ({ map: st.map.map((x, j) => (j === idx ? Object.assign({}, x, { ok: true }) : x)) })); },
+        bg: weak ? '#FFFAF2' : '#FFFFFF',
+        confText: mr.field === 'skip' ? 'Not imported' : mr.ok ? 'Confirmed' : weak ? 'Check · ' + mr.conf + '%' : mr.conf + '%',
+        confFg: weak ? '#9A4A00' : '#5B616E', confWeight: weak ? '600' : '400',
+        change: (e) => { const v = e.target.value; self.setState((st) => ({ map: st.map.map((x, j) => (j === idx ? Object.assign({}, x, { field: v, ok: true }) : x)) })); }
+      };
+    });
+    const mapped = REQ.filter((k) => s.map.some((x) => x.field === k)).length;
+    const mapOk = mapped === REQ.length;
+    const weakCount = mapRows.filter((x) => x.weak).length;
+
+    const steps = ['Add patients', midLabel, 'Review', 'Done'].map((label, n) => {
+      const cur = stepIdx[s.step], done = n < cur, on = n === cur;
+      return { label, n: n + 1, fg: on ? '#1A1D23' : done ? '#1A1D23' : '#5B616E', weight: on ? '600' : '400', dotBg: on ? '#2563DD' : done ? '#EEF3FE' : '#FFFFFF', dotFg: on ? '#FFFFFF' : done ? '#1F4FB8' : '#5B616E', dotBorder: on ? '#2563DD' : done ? '#C9D8FB' : '#D9DCE2' };
+    });
+
+    const shipOpts = ['Normal', 'Priority', 'Pro Services'].map((o) => {
+      const on = s.batch.ship === o;
+      return { label: o, on, bg: on ? '#EEF3FE' : '#FFFFFF', border: on ? '#2563DD' : '#E4E6EB', fg: on ? '#1F4FB8' : '#1A1D23', pick: () => this.setState({ batch: Object.assign({}, s.batch, { ship: o }) }) };
+    });
+    const setB = (k) => (e) => { const v = e.target.value; self.setState((st) => ({ batch: Object.assign({}, st.batch, { [k]: v }) })); };
+
+    const crumbs = { list: 'Order Management', setup: 'Bulk upload', add: 'Bulk upload', map: 'Bulk upload', extract: 'Bulk upload', review: fhir ? 'Incoming orders' : 'Bulk upload', done: fhir ? 'Incoming orders' : 'Bulk upload', incoming: 'Incoming orders' };
+    const pendingH = s.hospitals.filter((h) => h.pending > 0);
+    const incomingTotal = pendingH.reduce((a, h) => a + h.pending, 0);
+    const openHosp = (h) => () => {
+      const all = this.seedRows();
+      const rows = h.rowsLeft ? h.rowsLeft : (h.rowIds ? all.filter((r) => h.rowIds.includes(r.id)) : all);
+      this.setState({ mode: 'fhir', curHosp: h.id, rows, step: 'review', filter: 'all', q: '', sel: null, srcOpen: null, res: null, menuOpen: false,
+        batch: Object.assign({}, s.batch, { inst: h.name, program: h.program, gateway: h.gateway, ship: h.ship }) });
+    };
+    const STATUS_C = { 'Connected': ['#5B616E', 'transparent', '#2E8A5B'], 'Needs attention': ['#9A4A00', '#FFF3E3', '#D97706'] };
+    const setDup = (c) => () => { if (selRow) this.updRow(selRow.id, (r) => Object.assign({}, r, { dupChoice: c })); };
+
+    const res = s.res || { created: 0, newPatients: 0, linked: 0, draft: 0, skipped: 0, hasDraft: false };
+
+    return {
+      crumb: crumbs[s.step],
+      isList: s.step === 'list', inFlow: s.step !== 'list',
+      isIncoming: s.step === 'incoming', hasIncoming: incomingTotal > 0, noIncoming: incomingTotal === 0, incomingTotal,
+      incomingHospText: pendingH.length === 1 ? pendingH[0].name : pendingH.length + ' connected hospitals',
+      openIncoming: () => this.setState({ step: 'incoming', mode: 'fhir', menuOpen: false, sel: null }),
+      pendingHosp: pendingH.map((h) => ({ name: h.name, system: h.system, last: h.last, pending: h.pending, review: openHosp(h) })),
+      hospRows: s.hospitals.map((h) => ({ name: h.name, system: h.system, status: h.status, last: h.last, defaults: h.program + ' · ' + h.gateway + ' · ' + h.ship, sFg: STATUS_C[h.status][0], sBg: STATUS_C[h.status][1], sDot: STATUS_C[h.status][2] })),
+      fhirHistory: s.fhirHistory,
+      tabHosp: (s.incTab || 'hosp') === 'hosp', tabHist: s.incTab === 'hist',
+      incTabs: [['hosp', 'Connected hospitals (' + s.hospitals.length + ')'], ['hist', 'History']].map(([k, label]) => {
+        const on = (s.incTab || 'hosp') === k;
+        return { label, on, weight: on ? '600' : '500', fg: on ? '#1A1D23' : '#5B616E', line: on ? '#2563DD' : 'transparent', pick: () => this.setState({ incTab: k }) };
+      }),
+      showStepper: !fhir, srcHead: fhir ? 'Received' : 'Source',
+      flowTitle: fhir ? (s.step === 'incoming' || !hosp ? 'Incoming orders' : 'Incoming orders · ' + hosp.name) : 'Bulk upload new orders',
+      exitLabel: fhir ? (s.step === 'incoming' ? 'Back to orders' : 'Back to incoming') : 'Save draft & exit',
+      doneMainLabel: fhir ? 'Back to incoming orders' : 'View batch in Order Management',
+      doneMain: () => fhir ? this.setState({ step: 'incoming' }) : this.setState({ step: 'list', draftBanner: true }),
+      isSetup: s.step === 'setup', isAdd: s.step === 'add', isMap: s.step === 'map', isExtract: s.step === 'extract', isReview: s.step === 'review', isDone: s.step === 'done',
+      isDocs: m === 'docs', isTpl: m === 'tpl',
+      menuOpen: s.menuOpen,
+      showDraftBanner: s.draftBanner && openCount > 0 && !fhir, draftCount: openCount,
+      noop: () => {},
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen }),
+      startBulk: () => this.setState({ mode: 'bulk', step: 'add', menuOpen: false, fileReady: false, rows: this.seedRows(), map: this.seedMap(), filter: 'all', q: '', sel: null, res: null, draftBanner: false }),
+      exitFlow: () => fhir ? (s.step === 'incoming' ? this.setState({ step: 'list', mode: 'bulk', sel: null }) : this.setState({ step: 'incoming', sel: null })) : this.setState({ step: 'list', sel: null, draftBanner: s.step === 'review' || s.step === 'done' }),
+      steps,
+      batch: s.batch, setTenant: setB('tenant'), setInst: setB('inst'), setProgram: setB('program'), setGateway: setB('gateway'),
+      shipOpts, devices,
+      goSetup: () => this.setState({ step: 'setup' }),
+      goAdd: () => this.setState({ step: 'add' }),
+      goMid: () => this.setState({ step: m === 'docs' ? 'extract' : m === 'sheet' ? 'map' : 'review', filter: 'all', q: '', sel: null }),
+      goReview: () => this.setState({ step: 'review', filter: 'all' }),
+      goBackFromReview: () => fhir ? this.setState({ step: 'incoming', sel: null }) : this.setState({ step: m === 'docs' ? 'extract' : m === 'sheet' ? 'map' : 'add', sel: null }),
+      methods, dropTitle: drop[0], dropHint: drop[1], chosenFiles: drop[2], addCta: drop[3],
+      fileReady: s.fileReady, noFile: !s.fileReady,
+      chooseFile: () => this.setState({ fileReady: true, rows: this.seedRows(), map: this.seedMap(), filter: 'all', q: '', sel: null, res: null }),
+      mapRows, mapBlocked: !mapOk, weakCount, hasWeak: weakCount > 0,
+      confirmAll: () => this.setState((st) => ({ map: st.map.map((x) => Object.assign({}, x, { ok: true })) })),
+      reqText: mapOk ? 'All 8 required fields matched' : mapped + ' of 8 required fields matched',
+      reqBg: mapOk ? '#EAF6EF' : '#FEEFEE', reqFg: mapOk ? '#1F6B45' : '#B42318',
+      extractFiles: [
+        { name: 'referral_delgado.pdf', kind: 'Referral form · 1 page', note: '1 patient', noteFg: '#5B616E' },
+        { name: 'facesheets_nov.pdf', kind: 'Face sheets · 14 pages', note: '6 patients', noteFg: '#5B616E' },
+        { name: 'fax_scan_0193.tiff', kind: 'Faxed referral · 1 page', note: '1 patient · low scan quality', noteFg: '#9A4A00' },
+        { name: 'insurance_card_okafor.jpg', kind: 'Insurance card', note: 'Attached to James Okafor', noteFg: '#5B616E' },
+        { name: 'referral_list_clinicA.pdf', kind: 'Referral list · 2 pages', note: '2 patients', noteFg: '#5B616E' }
+      ],
+      filters, q: s.q, setQ: (e) => this.setState({ q: e.target.value }),
+      bulkShip: (e) => { const v = e.target.value; if (!v) return; self.setState((st) => ({ rows: st.rows.map((r) => Object.assign({}, r, { ship: v === st.batch.ship ? null : v })) })); },
+      viewRows, noRows: viewRows.length === 0,
+      actW: (fhir ? (14 + 70 + (viewRows.some((x) => x.canConfirm) ? 72 : 0)) : Math.max(66, 14 + 30 + (m === 'docs' ? 32 : 0) + (viewRows.some((x) => x.canConfirm) ? 72 : 0))) + 'px', hasReviewRows: counts.review > 0, reviewCount: counts.review,
+      confirmAllLow: () => this.setState((st) => ({ rows: st.rows.map((r) => Object.assign({}, r, { low: [] })) })),
+      hasSel: !!sel, sel: sel || { fields: [], docLines: [] },
+      closeSel: () => this.setState({ sel: null }),
+      dupLink: setDup('link'), dupNew: setDup('new'), dupSkip: setDup('skip'), dupUndo: setDup(null),
+      setRowProgram: (e) => { const v = e.target.value; if (selRow) this.updRow(selRow.id, (r) => Object.assign({}, r, { program: v === s.batch.program ? null : v })); },
+      setRowShip: (e) => { const v = e.target.value; if (selRow) this.updRow(selRow.id, (r) => Object.assign({}, r, { ship: v === s.batch.ship ? null : v })); },
+      markReviewed: () => { if (selRow) this.updRow(selRow.id, (r) => Object.assign({}, r, { low: [] })); },
+      removeRow: () => { if (selRow) this.setState((st) => ({ rows: st.rows.filter((r) => r.id !== selRow.id), sel: null })); },
+      nextIssue, nextLabel: openCount > 0 ? 'Next issue' : 'Done',
+      readyCount: counts.ready, openCount,
+      noneReady: counts.ready === 0,
+      submitLabel: 'Create ' + counts.ready + ' orders',
+      submit: () => {
+        const ready = rowsWithStatus.filter((x) => x.st === 'ready');
+        const linked = ready.filter((x) => x.r.dupChoice === 'link').length;
+        const remaining = s.rows.filter((r) => ['review', 'missing', 'dup'].includes(this.status(r)));
+        const upd = {};
+        if (fhir && hosp) {
+          upd.hospitals = s.hospitals.map((h) => (h.id === hosp.id ? Object.assign({}, h, { pending: remaining.length, rowsLeft: remaining }) : h));
+          upd.fhirHistory = [{ date: 'Nov 19, 2026', hosp: hosp.name, received: s.rows.length, created: ready.length, declined: counts.declined, by: 'Manisha Mishra' }].concat(s.fhirHistory);
+        }
+        this.setState(Object.assign(upd, {
+          step: 'done', sel: null, rows: remaining,
+          res: { created: ready.length, newPatients: ready.length - linked, linked, draft: remaining.length, skipped: counts.skipped + counts.declined, hasDraft: remaining.length > 0,
+            sub: fhir && hosp ? 'From ' + hosp.name : 'Batch BATCH-0042',
+            draftLabel: fhir ? 'Still waiting for review' : 'Patients still in your draft',
+            skipLabel: fhir ? 'Declined or skipped' : 'Patients skipped' }
+        }));
+      },
+      res,
+      toList: () => this.setState({ step: 'list', draftBanner: true }),
+      resumeDraft: () => this.setState({ step: 'review', filter: 'all', draftBanner: false, menuOpen: false })
+    };
+  }
+}
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Component, {}));
+</script>
+</body>
+</html>
